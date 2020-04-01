@@ -37,8 +37,7 @@ function checkDirectory(path, create)
     if ~exist(path, 'dir')
         if create
            mkdir(path)
-           fprintf("folder created: %s
-", path)
+           fprintf("folder created: %s", path)
         else
             error("Path does not exist:", path)
         end
