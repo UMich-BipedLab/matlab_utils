@@ -29,25 +29,60 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function plotOriginalAxis(fig_handle, pose_H, length, properteis)
+function plotOriginalAxis(axes_handle, pose_H, length, properteis, txt)
+
     if ~exist('properteis', 'var')
         properteis = '-b';
     end
     if ~exist('length', 'var')
         length = 1;
     end
-    origin = pose_H(:, 4);
+    if ~exist('pose_H', 'var')
+        pose_H = eye(4);
+    end
+    if ~exist('axes_handle', 'var')
+        axes_handle = createFigHandle(1, "");
+    end
+    if isnumeric(axes_handle) && ~isempty(axes_handle)
+        figure(axes_handle)
+        axes_handle = get(gcf,'CurrentAxes');
+    end
+    
+    if isempty(axes_handle)
+        axes_handle = createFigHandle(1, "");
+    end
+    
+    if ~exist('txt', 'var')
+        txt = "";
+    end
+    
+    origin = pose_H(1:3, 4);
     x_arrow = pose_H * ([length; 0; 0; 0]);
     y_arrow = pose_H * ([0; length; 0; 0]);
     z_arrow = pose_H * ([0; 0; length; 0]);
+    hold(axes_handle, 'on')
     
-    quiver3(fig_handle, ...
+    quiver3(axes_handle, ...
             repelem(origin(1), 3)', repelem(origin(2), 3)', repelem(origin(3), 3)', ...
             [x_arrow(1) ; y_arrow(1) ;  z_arrow(1)], ...
             [x_arrow(2) ; y_arrow(2) ;  z_arrow(2)], ... 
             [x_arrow(3) ; y_arrow(3) ;  z_arrow(3)], ...
             properteis, 'fill', 'LineWidth', 3)
-    text(x_arrow(1), y_arrow(1), z_arrow(1), "x")
-    text(x_arrow(2), y_arrow(2), z_arrow(2), "y")
-    text(x_arrow(3), y_arrow(3), z_arrow(3), "z")
+    text_offset = 0.2;
+    text_x_offset = pose_H * ([text_offset; 0; 0; 0]);
+    text_y_offset = pose_H * ([0; text_offset; 0; 0]);
+    text_z_offset = pose_H * ([0; 0; text_offset; 0]);
+    text(axes_handle, origin(1) + x_arrow(1) + text_x_offset(1), ...
+                      origin(2) + x_arrow(2) + text_x_offset(2), ...
+                      origin(3) + x_arrow(3) + text_x_offset(3), ...
+                      "x", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+    text(axes_handle, origin(1) + y_arrow(1) + text_y_offset(1), ...
+                      origin(2) + y_arrow(2) + text_y_offset(2), ...
+                      origin(3) + y_arrow(3) + text_y_offset(3), ...
+                      "y", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+    text(axes_handle, origin(1) + z_arrow(1) + text_z_offset(1), ...
+                      origin(2) + z_arrow(2) + text_z_offset(2), ...
+                      origin(3) + z_arrow(3) + text_z_offset(3), ...
+                      "z", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+    text(axes_handle, origin(1), origin(2), origin(3)-0.05, txt, 'interpreter','latex', 'FontSize', axes_handle.FontSize);
 end

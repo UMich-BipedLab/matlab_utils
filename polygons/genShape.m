@@ -43,11 +43,15 @@
 % disp("Done!")
 
 function vertices = genShape(shape, size, n)
+    if isempty(shape)
+        shape = 'polygon';
+    end
     if isstring(shape) || ischar(shape)
         shape =  lower(shape);
         
         switch shape
             case 'square'
+                % there are essentailly the same...
                 n = 4;
                 fprintf('----- generating a square shape with length %d...\n', size)
                 vertices = genSquare(size);

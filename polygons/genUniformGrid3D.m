@@ -41,5 +41,4 @@ function points_moved = genUniformGrid3D(pose, num_points, length)
     [y, z] = genUniformGrid(num_points, length);
     points = [x;y;z;ones(1, num_points^2)];
     points_moved = pose * points;
-    
 end

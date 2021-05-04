@@ -29,7 +29,7 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function plotMultiplePolygonsVertices(image_handle, polygons_vertices, color_list, hold_on)
+function h = plotMultiplePolygonsVertices(image_handle, polygons_vertices, color_list, hold_on)
 
     num_objs = length(polygons_vertices);
     if ~exist('color_list', 'var')
@@ -43,13 +43,23 @@ function plotMultiplePolygonsVertices(image_handle, polygons_vertices, color_lis
     
     if length(color_list) ~= num_objs
         for i = 1 : length(polygons_vertices)
-            plotConnectedVerticesStructure(image_handle, polygons_vertices(i).object_vertices)
+            if isfield(polygons_vertices, 'object_vertices')
+                h = plotConnectedVerticesStructure(image_handle, polygons_vertices(i).object_vertices);
+            else
+                h = plotConnectedVerticesStructure(image_handle, polygons_vertices(i).vertices);
+            end
         end
     else
         for i = 1 : num_objs
 %             color_list(i)
-            plotConnectedVerticesStructure(image_handle, polygons_vertices(i).object_vertices, color_list{i})
+            if isfield(polygons_vertices, 'object_vertices')
+                plotConnectedVerticesStructure(image_handle, polygons_vertices(i).object_vertices, color_list{i})
+            else
+                h = plotConnectedVerticesStructure(image_handle, polygons_vertices(i).vertices, color_list{i});
+            end
         end        
     end
-
+    if ~nargout % if nargout == 0
+       clearvars % or simply clearvars y
+    end
 end

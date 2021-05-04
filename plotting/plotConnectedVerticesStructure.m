@@ -29,7 +29,7 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function plotConnectedVerticesStructure(fig_handle, vertices, properties, hold_on)
+function h = plotConnectedVerticesStructure(fig_handle, vertices, properties, hold_on)
 %     if isempty(fig_handle)
 %         fig_handle = createFigHandleWithNumber(1, 999,"test");
 %     end
@@ -40,17 +40,20 @@ function plotConnectedVerticesStructure(fig_handle, vertices, properties, hold_o
     if ~exist('hold_on','var')
          hold_on = 'on';
     end
-
+    [~, fig_handle] = checkFigureHandle(fig_handle, 1);
     hold(fig_handle, hold_on)
     if isfield(vertices, 'z')
-        plot3(fig_handle, ...
-              [vertices.x vertices.x(1)], ...
-              [vertices.y vertices.y(1)], ...
-              [vertices.z vertices.z(1)], 'color', properties)
+        h = plot3(fig_handle, ...
+            [vertices.x vertices.x(1)], ...
+            [vertices.y vertices.y(1)], ...
+            [vertices.z vertices.z(1)], 'color', properties, 'LineWidth', 2);
     else
-        plot(fig_handle, ...
-             [vertices.x vertices.x(1)], ...
-             [vertices.y vertices.y(1)], 'color', properties)
+        h = plot(fig_handle, ...
+                [vertices.x vertices.x(1)], ...
+                [vertices.y vertices.y(1)], 'color', properties, 'LineWidth', 2);
     end
         %     hold(fig_handle, hold_on)
+    if ~nargout % if nargout == 0
+       clearvars % or simply clearvars y
+    end
 end

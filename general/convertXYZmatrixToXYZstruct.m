@@ -34,11 +34,13 @@ function XYZ_structure = convertXYZmatrixToXYZstruct(matrix)
     XYZ_structure.x = matrix(1, :);
     XYZ_structure.y = matrix(2, :);
     
-    flag_h_corrd = all(matrix(end,:));
+    flag_h_corrd = all(matrix(end,:)==1);
     
     if rows == 3 
         if flag_h_corrd
             return;
+        else
+            XYZ_structure.z = matrix(3, :);
         end
     elseif rows == 4
         if flag_h_corrd

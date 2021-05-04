@@ -29,13 +29,62 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function fig_handle = createFigHandle(num_handles, name)
-%     fig_handle = zeros(1,num_handles);
-%     fig_handle = cell(1, num_handles);
-    fig_handle = [];
-    for i=1:num_handles
-        fig = figure('Name', name + "-" + num2str(i), ...
-                     'NumberTitle', 'off', 'Visible', 'off');
-        fig_handle = [fig_handle; axes('parent', fig)];
+
+function [intersection_point, check] = findIntersectionOfPlaneAndLineGivenPlane(normal, centroid, p_1, p_2)
+    if ~isrow(p_1)
+        p_1 = p_1';
     end
+    
+    if ~isrow(p_2)
+        p_2 = p_2';
+    end
+    
+    if ~isrow(centroid)
+        centroid = centroid';
+    end
+    
+    intersection_point = [];
+    u = p_2 - p_1;
+    w = p_1 - centroid;
+    D = dot(normal, u);
+    N = -dot(normal, w);
+    
+    %% Check if two end points lie on the plane
+%     if dot(p_1 - centroid, normal) < 1e-5
+%         check = 1;
+%         intersection_point = makeColumn(p_1);
+%         disp("p1 intersect")
+%         
+%         return
+%     elseif dot(p_2 - centroid, normal) < 1e-5
+%         check = 1;
+%         intersection_point = makeColumn(p_2);
+%         disp("p2 intersect")
+%         return
+%     end
+    
+    %% Check if the segment intersect with the plane
+
+
+    if abs(D) < 10^-7 % Parallel to plane
+        if N == 0 % Lies on plane           
+            check = 2;
+            return
+        else
+            % No intersection
+            check=0;  
+            return
+        end
+    end
+    
+    % Compute the intersection parameter
+    sI = N / D;
+    intersection_point = p_1+ sI.*u;
+    if (sI < 0 || sI > 1)
+        % The intersection point lies outside the segment, so there is no intersection
+        check= 3;          
+    else
+        check=1;
+    end
+    intersection_point = makeColumn(intersection_point);
 end

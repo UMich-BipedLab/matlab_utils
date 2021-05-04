@@ -29,17 +29,34 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function viewCurrentPlot(handle, title_txt, view_angle)
-    set(get(handle, 'parent'), 'visible','on');% show the current axes
-    axis(handle, 'equal')
-    xlabel(handle, "x")
-    ylabel(handle, "y")
-    zlabel(handle, "z")
-    if exist('title_txt', 'var')
-        title(handle, title_txt)
+function viewCurrentPlot(handle, title_txt, view_angle, equal)
+    [~, handle] = checkFigureHandle(handle, 1);
+    
+    % settings
+%     handle.FontSize = 18; 
+    set(handle, 'LineWidth',2)
+    
+    if exist('title_txt', 'var') && ~isempty(title_txt)
+        title(handle, title_txt, 'interpreter','latex', 'FontSize', handle.FontSize)
     end
-    if exist('view_angle', 'var')
+    if exist('view_angle', 'var') && ~isempty(view_angle)
         view(handle, view_angle(1), view_angle(2));
     end
+        
+    xlabel(handle, "x",'interpreter','latex', 'FontSize', handle.FontSize)
+    ylabel(handle, "y",'interpreter','latex', 'FontSize', handle.FontSize)
+    zlabel(handle, "z",'interpreter','latex', 'FontSize', handle.FontSize)
+    
+    if ~exist('equal', 'var')
+        axis(handle, 'equal')
+    else
+        if equal
+            axis(handle, 'equal')
+        else
+            axis(handle, 'normal')
+        end
+    end
+    grid(handle, 'on')
+    set(get(handle, 'parent'), 'visible','on');% show the current axes
     drawnow
 end

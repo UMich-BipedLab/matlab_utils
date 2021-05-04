@@ -30,9 +30,14 @@
 %}
 
 
-function X = makeWideMatrix(X)
+function X = makeWideMatrix(X, verbose)
+    if ~exist('verbose', 'var') || isempty(verbose)
+        verbose = 0;
+    end
     [m, n] = size(X);
     if m > n
         X = X';
+    elseif m==n && verbose
+        warning("m, n are the same, please check again carefully")
     end
 end

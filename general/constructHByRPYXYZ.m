@@ -33,9 +33,10 @@
 % clc
 % rpy = [10 20 30]; % in degree
 % xyz = [10, 0, 20];
-% H = t_constructHByRPYXYZ(rpy, xyz)
+% H = t_constructHByRPYXYZ(rpy, xyz, 1) 
+% default is moving points in the same frame
 
-function H = constructHByRPYXYZ(rpy, xyz)
+function H = constructHByRPYXYZ(rpy, xyz, type)
     if ~isvector(rpy) || ~isvector(xyz)
         error("inputs have to be two vectors")
     end
@@ -46,7 +47,24 @@ function H = constructHByRPYXYZ(rpy, xyz)
         xyz = xyz';
     end
     
-    H = eye(4);
-    H(1:3, 1:3) = rotx(rpy(1)) * roty(rpy(2)) * rotz(rpy(3));
-    H(1:3, 4) = xyz;
+    if ~exist('type', 'var')
+        type = "1";
+    end
+    
+    if contains(string(type), "1", 'IgnoreCase', true) || ...
+       contains(string(type), "moving", 'IgnoreCase', true) || ...
+       contains(string(type), "points", 'IgnoreCase', true)
+%        disp(1)
+        H = constructHByRPYXYZMovingPoints(rpy, xyz);
+        
+    elseif contains(string(type), "2", 'IgnoreCase', true) || ...
+           contains(string(type), "changing", 'IgnoreCase', true) || ...
+           contains(string(type), "coordinate", 'IgnoreCase', true) || ...
+           contains(string(type), "frame", 'IgnoreCase', true)
+%         disp(2)
+%         H = constructHByRPYXYZChangingCoordinates(rpy, xyz);
+        H = inv(constructHByRPYXYZMovingPoints(rpy, xyz));
+    else
+        error("Undefined option: %s; The option should be 'moving points', 'changing coordinate', 1, 2", string(type))
+    end
 end

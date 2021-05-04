@@ -51,12 +51,16 @@
 % [flag, points] = t_checkHomogeneousCoord(test3D_nonhomo)
 % [flag, points] = t_checkHomogeneousCoord(test3D_homo)
 % [flag, points] = t_checkHomogeneousCoord(test_random)
-function [flag, points] = checkHomogeneousCoord(points)
+function [flag, points] = checkHomogeneousCoord(points, make_homogeneous)
     % Assuming points is either 2xn, 3xn or 4xn
     % check 2D or 3D
+    if ~exist('make_homogeneous', 'var')
+        make_homogeneous = 1;
+    end
+    
     flag = 1;
-    [m, m_prim3] = size(points);
-    if min(m, m_prim3) > 3
+    [m, m_prime] = size(points);
+    if min(m, m_prime) > 3
         points = makeWideMatrix(points);
     end
     [n, ~] = size(points);
@@ -64,20 +68,24 @@ function [flag, points] = checkHomogeneousCoord(points)
         error("Wrong usage: input rows are smaller than 2 or bigger than 4 (currently is %i)", n)
     elseif n == 2 % 2D non-homo
         flag = 0;
-        points = [points; 
-                   ones(1, size(points, 2))];
+        if make_homogeneous
+            points = [points; 
+                       ones(1, size(points, 2))];
+        end
     elseif n == 3
-        if ~isempty(points(3, points(3, :)==1)) % 2D homogeneous
+        if all(points(3, :)==1) % 2D homogeneous
             flag = 1;
             
             return;
         else % 3D none-homo
             flag = 0;
-            points = [points; 
-                       ones(1, size(points, 2))];
+            if make_homogeneous
+                points = [points; 
+                           ones(1, size(points, 2))];
+            end
         end
     elseif n==4
-        if isempty(points(4, points(4, :)==1)) % 3D but not in homogeneous
+        if ~all(points(4, :)==1) % 3D but not in homogeneous
             error("wrong usage: mean of the last rows is not one but %f", mean(points(4,:), 2))
         end
         flag = 1;
