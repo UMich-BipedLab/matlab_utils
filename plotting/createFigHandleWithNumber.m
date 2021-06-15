@@ -42,7 +42,8 @@
 
 
 function [axes_handles, fig_handles] = createFigHandleWithNumber(...
-    num_handles, start_number, name, clear_fig, show_fig, font_size)
+    num_handles, start_number, name, clear_fig, show_fig, font_size, ...
+    dock_figure)
 %     fig_handle = zeros(1,num_handles);
 %     fig_handle = cell(1, num_handles);
     start_number = max(1, start_number);
@@ -57,6 +58,10 @@ function [axes_handles, fig_handles] = createFigHandleWithNumber(...
     if ~exist('font_size', 'var') || isempty(font_size)
         font_size = 30;
     end
+    if ~exist('dock_figure', 'var') || isempty(dock_figure)
+        dock_figure = 1;
+    end
+    
     for i = start_number : start_number+num_handles-1
 %         set(0,'DefaultFigureVisible','off');
         if ishandle(i)
@@ -71,6 +76,12 @@ function [axes_handles, fig_handles] = createFigHandleWithNumber(...
                 set(i, 'Name', name + "-" + num2str(i-start_number+1), ...
                     'Visible', 'off');
             end
+            if dock_figure
+                set(i, 'WindowStyle','docked')
+            else
+                set(i, 'WindowStyle','normal')
+            end
+            
             axes_h = gca(i);
             axes_h.FontSize = font_size;
             hold(axes_h, 'on');
@@ -87,7 +98,11 @@ function [axes_handles, fig_handles] = createFigHandleWithNumber(...
                     'Name', name + "-" + num2str(i-start_number+1), ...
                     'Visible', 'off');
             end
-            
+            if dock_figure
+                set(fig, 'WindowStyle','docked')
+            else
+                set(fig, 'WindowStyle','normal')
+            end
             axes_h = axes('parent', i);
             hold(axes_h, 'on');
             axes_h.FontSize = font_size;
