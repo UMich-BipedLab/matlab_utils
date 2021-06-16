@@ -31,6 +31,9 @@
 
 function viewCurrentPlot(handle, title_txt, view_angle, equal)
     [~, handle] = checkFigureHandle(handle, 1);
+    if ~exist('view_angle', 'var') || isempty(view_angle)
+        view_angle = [0, 90];
+    end
     
     % settings
 %     handle.FontSize = 18; 
