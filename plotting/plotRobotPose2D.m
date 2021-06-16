@@ -19,13 +19,16 @@ function h = plotRobotPose2D(axes_h, pose, arrowColor, arrowLength)
 
 
     % plot line
+    hg = hggroup(axes_h);
     h1 = line(axes_h, arrowHead(1,:),arrowHead(2,:), ...
-        'Color',arrowColor,'LineWidth',2); 
+        'Color',arrowColor,'LineWidth',2,'Parent',hg); 
     h2 = line(axes_h, arrowBody(1,:),arrowBody(2,:), ...
-        'Color',arrowColor,'LineWidth',2); 
+        'Color',arrowColor,'LineWidth',2,'Parent',hg); 
     h3 = line(axes_h, crossLine_1(1,:),crossLine_1(2,:), ...
-        'Color',arrowColor,'LineWidth',2);
+        'Color',arrowColor,'LineWidth',2,'Parent',hg);
     h4 = line(axes_h, crossLine_2(1,:),crossLine_2(2,:), ...
-        'Color',arrowColor,'LineWidth',2);
-    h = [h1, h2, h3, h4];
+        'Color',arrowColor,'LineWidth',2,'Parent',hg);
+    
+%     h = [h1, h2, h3, h4];
+    h = hg;
 end
