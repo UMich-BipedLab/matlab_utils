@@ -31,11 +31,14 @@
 
 % format_type: https://www.mathworks.com/help/matlab/ref/saveas.html#d120e1105140
 
+% saveCurrentPlot(fig_h(1), filename, 'png')
 function saveCurrentPlot(handle, filename, ext, format_type)
     [fig_flag, axes_flag] = checkFigureAxesHandle(handle);
     if ~fig_flag && ~axes_flag
         warning("Both fig_h and axes_h do not exist")
     elseif ~fig_flag && axes_flag
+        warning('on')
+        
         warning("axes_h exists but fig_h does not exist")
         warning("Perhaps passing wrong handles? You should pass fig_h to save the figure.")
     elseif fig_flag
