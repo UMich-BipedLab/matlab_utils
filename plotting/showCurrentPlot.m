@@ -30,7 +30,10 @@
 %}
 
 function showCurrentPlot(handle, title_txt, view_angle, equal)
-    if ~exist('equal', 'var')
+    if ~exist('view_angle', 'var') || isempty(view_angle)
+        view_angle = [0, 90];
+    end
+    if ~exist('equal', 'var') || isempty(equal)
         equal = 1;
     end
     viewCurrentPlot(handle, title_txt, view_angle, equal);
