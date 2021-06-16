@@ -1,5 +1,6 @@
 function fig = createFigureOptions(...
-    num_handles, start_number, name, clear_fig, show_fig, font_size)
+    num_handles, start_number, name, clear_fig, show_fig, font_size, ...
+    dock_fig)
     fig_handles = [];
     if ~exist('clear_fig', 'var') || isempty(clear_fig)
         clear_fig = 1;
@@ -10,6 +11,9 @@ function fig = createFigureOptions(...
     if ~exist('font_size', 'var') || isempty(font_size)
         font_size = 30;
     end
+    if ~exist('dock_fig', 'var') || isempty(dock_fig)
+        dock_fig = 1;
+    end
     
     fig.num = num_handles;
     fig.start_num = start_number;
@@ -17,4 +21,5 @@ function fig = createFigureOptions(...
     fig.clear_fig = clear_fig;
     fig.show_fig = show_fig;
     fig.font_size = font_size;
+    fig.dock_fig = dock_fig;
 end
