@@ -30,10 +30,11 @@
  %}
 
 
-function [normal, centroid] = computePlaneWithDirection(object, origin)
+function [normal, centroid, unit_normals] = computePlaneWithDirection(object, origin)
 
     [normal, centroid] = computePlane(object);
     dir_vec = origin - centroid; %  centorid to origin
     
     normal = computeConsistentNormals(normal, dir_vec);
+    unit_normals = normal./norm(normal);
 end

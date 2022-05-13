@@ -6,10 +6,10 @@ function [sorted_vertices, sorted_indices, flag] = sortVertices(opts, vertices_m
     
     sorted_vertices = [];
     [m, n] = size(vertices_mat);
-    if ~isfield(opts, 'verbose') || isempty(opts)
+    if ~exist('opts', 'var') ||  ~isfield(opts, 'verbose') || isempty(opts)
         opts.verbose.output_level = 0;
     end
-    if ~isfield(opts, 'assign_rank') || isempty(opts)
+    if ~exist('opts', 'var') || ~isfield(opts, 'assign_rank') || isempty(opts)
         opts.assign_rank = 0;
     end
     

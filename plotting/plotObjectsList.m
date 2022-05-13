@@ -10,6 +10,7 @@
 % function t_plotObjectsList(figure_handle, opts, LiDAR_opts, object_list)
 function h = plotObjectsList(figure_handle, opts, LiDAR_opts, object_list, obj_num)
     num_objects = length(object_list);
+    hg = hggroup(figure_handle);
     if isempty(opts)
         opts.simulate_lidar = 0;
         opts.clean_fig = 0;
@@ -51,7 +52,7 @@ function h = plotObjectsList(figure_handle, opts, LiDAR_opts, object_list, obj_n
         if opts.simulate_lidar
             scatter3(figure_handle, object_list(objects).points_mat(1, :), ...
                                     object_list(objects).points_mat(2, :), ...
-                                    object_list(objects).points_mat(3, :), '.')
+                                    object_list(objects).points_mat(3, :), '.','Parent',hg)
         end
         if ~isfield(object_list, 'consistent_normal')
              object_list = recomputeConsistentNormals(LiDAR_opts.pose.centriod, object_list);
@@ -62,8 +63,8 @@ function h = plotObjectsList(figure_handle, opts, LiDAR_opts, object_list, obj_n
             quiver3(figure_handle, ...
                     object_list(objects).centroid(1), object_list(objects).centroid(2), object_list(objects).centroid(3), ...
                     object_list(objects).consistent_normal(1)*arrow_len, object_list(objects).consistent_normal(2)*arrow_len, object_list(objects).consistent_normal(3)*arrow_len, ...
-                    'fill', 'r', 'LineWidth', 3)
-            scatter3(figure_handle, object_list(objects).centroid(1), object_list(objects).centroid(2), object_list(objects).centroid(3), 'fill', 'ok')
+                    'fill', 'r', 'LineWidth', 3,'Parent',hg)
+            scatter3(figure_handle, object_list(objects).centroid(1), object_list(objects).centroid(2), object_list(objects).centroid(3), 'fill', 'ok','Parent',hg)
         end
         if ~exist('obj_num', 'var')
             obj_num = objects;
@@ -72,7 +73,7 @@ function h = plotObjectsList(figure_handle, opts, LiDAR_opts, object_list, obj_n
         end
         
         if opts.show_text
-            text(figure_handle, object_list(objects).centroid(1), object_list(objects).centroid(2), object_list(objects).centroid(3), num2str(obj_num))
+            text(figure_handle, object_list(objects).centroid(1), object_list(objects).centroid(2), object_list(objects).centroid(3), num2str(obj_num),'Parent',hg)
         end
         clear obj_num
     end
@@ -85,6 +86,6 @@ function h = plotObjectsList(figure_handle, opts, LiDAR_opts, object_list, obj_n
     if ~nargout % if nargout == 0
        clearvars % or simply clearvars y
     else
-        h = figure_handle.Children;
+        h = hg;
     end
 end

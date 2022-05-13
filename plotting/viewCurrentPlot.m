@@ -40,7 +40,8 @@ function viewCurrentPlot(handle, title_txt, view_angle, equal)
     set(handle, 'LineWidth',2)
     
     if exist('title_txt', 'var') && ~isempty(title_txt)
-        title(handle, title_txt, 'interpreter','latex', 'FontSize', handle.FontSize)
+        title(handle, title_txt, ...
+            'interpreter','latex', 'FontSize', handle.FontSize)
     end
     if exist('view_angle', 'var') && ~isempty(view_angle)
         view(handle, view_angle(1), view_angle(2));

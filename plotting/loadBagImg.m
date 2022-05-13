@@ -29,29 +29,25 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-
-function point_cloud = loadPointCloud(path, name)
-    if nargin == 1
-        file = path;
-    else
-        file = path + name;
+function loadBagImg(img_handle, bag_file_path, bag_file, topic, timestamp)
+    if ~exist('topic', 'var') || isempty(topic)
+        topic = '/camera/color/image_raw';
     end
     
-    if ~isfile(file)
-        error('Invalid path when loading dataset: path %s', file)
-    else
-        pc = load(file);
-        if isfield(pc, 'point_cloud')
-            point_cloud = pc.point_cloud; % [scan, point, [X, Y, Z, I, R]]
-        else
-            fields = fieldnames(pc);
-            if length(fields) ~= 1
-                disp("There are more than one field, which one is point cloud? ")
-                fields
-                error("exitting now...")
-            else
-                point_cloud = pc.(fields{1});
-            end
-        end
+    if ~exist('timestamp', 'var') || isempty(timestamp)
+        timestamp = 1;
     end
+
+    % load image
+    hold(img_handle, 'on');
+    bagselect = rosbag(bag_file_path + bag_file);
+    bagselect2 = select(bagselect,'Time',...
+        [bagselect.StartTime bagselect.StartTime + 1], 'Topic', topic);
+    allMsgs = readMessages(bagselect2);
+    [img,~] = readImage(allMsgs{1});
+    imshow(img, 'Parent', img_handle);
+    img_handle.XLim = [0 size(img,2)];
+    img_handle.YLim = [0 size(img,1)];
+    title(img_handle, bag_file)
+    hold(img_handle, 'off');
 end

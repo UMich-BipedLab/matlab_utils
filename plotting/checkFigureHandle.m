@@ -26,7 +26,7 @@ function [flag_handle, figure_axes] = checkFigureHandle(t_fig_handle, create_fig
 
     if ~flag_handle && create_fig
         flag_handle = true;
-        figure_axes = createFigHandleWithNumber(1, t_fig_handle, "NEW-Test", 0, 0);
+        figure_axes = createFigHandleWithNumber(1, t_fig_handle, "NEW-Test", 0, 1);
 %         figure_handle = createFigHandle(1, "Test");
     end
         

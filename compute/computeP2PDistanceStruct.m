@@ -1,4 +1,4 @@
-function [distance_t, X,distance, mean_distance, std_distance, X]= computeP2PDistance(opts, points, plane)
+function distance_t = computeP2PDistanceStruct(opts, points, plane)
     if isempty(opts)
         warning_output = 0;
     end
@@ -17,5 +17,11 @@ function [distance_t, X,distance, mean_distance, std_distance, X]= computeP2PDis
         distance = sum(X);
         mean_distance = mean(X);
         std_distance = std(X);
+        
+        distance_t.X = X;
+        distance_t.sum_distance = distance;
+        distance_t.mean_distance = mean_distance;
+        distance_t.std_distance = std_distance;
+        distance_t.thickness = abs(max(X) - min(X));
     end
 end

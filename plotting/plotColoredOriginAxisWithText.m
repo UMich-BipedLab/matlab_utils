@@ -29,17 +29,31 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
-function plotColoredOriginAxisWithText(axes_handle, txt, pose_H, length, properties)
+function plotColoredOriginAxisWithText(axes_handle, txt, pose_H, length, width, axis_offset, text_offset, text_color)
 
-    if ~exist('length', 'var')
+    if ~exist('length', 'var') || isempty(length)
         length = 1;
     end
-    if ~exist('pose_H', 'var')
+    if ~exist('pose_H', 'var') || isempty(pose_H)
         pose_H = eye(4);
+    end
+    if ~exist('width', 'var') || isempty(width)
+        width =2;
     end
     if ~exist('axes_handle', 'var')
         axes_handle = createFigHandle(1, "");
     end
+    
+    if ~exist('axis_offset', 'var') || isempty(axis_offset)
+        axis_offset = 0.2;
+    end
+    if ~exist('text_offset', 'var') || isempty(text_offset)
+        text_offset = [0.1, 0, -0.1];
+    end
+    if ~exist('text_color', 'var') || isempty(text_color)
+        text_color = 'k';
+    end
+    
     if isnumeric(axes_handle) && ~isempty(axes_handle)
         figure(axes_handle)
         axes_handle = get(gcf,'CurrentAxes');
@@ -59,25 +73,30 @@ function plotColoredOriginAxisWithText(axes_handle, txt, pose_H, length, propert
     y_arrow = pose_H * ([0; length; 0; 0]);
     z_arrow = pose_H * ([0; 0; length; 0]);
     hold(axes_handle, 'on')
-    plot3(axes_handle, [origin(1), origin(1) + x_arrow(1)], [origin(2), origin(2) + x_arrow(2)], [origin(3), origin(3) + x_arrow(3)], 'r', 'LineWidth', 2)
-    plot3(axes_handle, [origin(1), origin(1) + y_arrow(1)], [origin(2), origin(2) + y_arrow(2)], [origin(3), origin(3) + y_arrow(3)], 'g', 'LineWidth', 2)
-    plot3(axes_handle, [origin(1), origin(1)+  z_arrow(1)], [origin(2), origin(2) + z_arrow(2)], [origin(3), origin(3) + z_arrow(3)], 'b', 'LineWidth', 2)
+    plot3(axes_handle, [origin(1), origin(1) + x_arrow(1)], [origin(2), origin(2) + x_arrow(2)], [origin(3), origin(3) + x_arrow(3)], 'r', 'LineWidth', width)
+    plot3(axes_handle, [origin(1), origin(1) + y_arrow(1)], [origin(2), origin(2) + y_arrow(2)], [origin(3), origin(3) + y_arrow(3)], 'g', 'LineWidth', width)
+    plot3(axes_handle, [origin(1), origin(1)+  z_arrow(1)], [origin(2), origin(2) + z_arrow(2)], [origin(3), origin(3) + z_arrow(3)], 'b', 'LineWidth', width)
 
-    text_offset = 0.2;
-    text_x_offset = pose_H * ([text_offset; 0; 0; 0]);
-    text_y_offset = pose_H * ([0; text_offset; 0; 0]);
-    text_z_offset = pose_H * ([0; 0; text_offset; 0]);
+
+    text_x_offset = pose_H * ([axis_offset; 0; 0; 0]);
+    text_y_offset = pose_H * ([0; axis_offset; 0; 0]);
+    text_z_offset = pose_H * ([0; 0; axis_offset; 0]);
     text(axes_handle, origin(1) + x_arrow(1) + text_x_offset(1), ...
                       origin(2) + x_arrow(2) + text_x_offset(2), ...
                       origin(3) + x_arrow(3) + text_x_offset(3), ...
-                      "x", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+                      "$x$", 'interpreter','latex', ...
+                      'FontSize', axes_handle.FontSize, 'Color', text_color);
     text(axes_handle, origin(1) + y_arrow(1) + text_y_offset(1), ...
                       origin(2) + y_arrow(2) + text_y_offset(2), ...
                       origin(3) + y_arrow(3) + text_y_offset(3), ...
-                      "y", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+                      "$y$", 'interpreter','latex', 'FontSize', axes_handle.FontSize, 'Color', text_color);
     text(axes_handle, origin(1) + z_arrow(1) + text_z_offset(1), ...
                       origin(2) + z_arrow(2) + text_z_offset(2), ...
                       origin(3) + z_arrow(3) + text_z_offset(3), ...
-                      "z", 'interpreter','latex', 'FontSize', axes_handle.FontSize);
-    text(axes_handle, origin(1), origin(2), origin(3)-0.05, txt, 'interpreter','latex', 'FontSize', axes_handle.FontSize);
+                      "$z$", 'interpreter','latex', 'FontSize', axes_handle.FontSize, 'Color', text_color);
+                  
+    text(axes_handle, origin(1) - text_offset(1), ...
+                      origin(2) - text_offset(2), ...
+                      origin(3) - text_offset(3), ...
+                      txt, 'interpreter','latex', 'FontSize', axes_handle.FontSize, 'Color', text_color);
 end

@@ -30,7 +30,7 @@
 %}
 
 function [x, y, modelInliers] = ransacLine(points, threshold)
-    sampleSize = max(floor(0.6*size(points,1)), 3); % number of points to sample per trial
+    sampleSize = max(floor(0.6*size(points,1)), 2); % number of points to sample per trial
     maxDistance = threshold; % max allowable distance for inliers
     fitLineFcn = @(points) polyfit(points(:,1),points(:,2),1); % fit function using polyfit
     evalLineFcn = ...   % distance evaluation function

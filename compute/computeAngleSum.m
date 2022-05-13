@@ -29,6 +29,7 @@
  * WEBSITE: https://www.brucerobot.com/
 %}
 
+
 function angle_sum = computeAngleSum(object_vertices, point)
     n = length(object_vertices.x);
     angle_sum = 0;

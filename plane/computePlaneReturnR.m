@@ -46,7 +46,19 @@ function [normal, centroid, U] = computePlaneReturnR(object)
     end
     
     centroid = mean(vertices_mat(1:3,:), 2);
-    [U, ~, ~] = svd(vertices_mat(1:3,:) - centroid);
+    try
+        [U, ~, ~] = svd(vertices_mat(1:3,:) - centroid);
+    catch ME
+        warning on
+        warning("-- SVD failed: %s", ME.identifier)
+        warning("-- SVD failed: %s", ME.message)
+        warning off
+        disp("-- Solving SVD via Limited Memory Block Krylov Subspace Optimization")
+        opts.tol = 1e-8;
+        opts.maxit = 300;
+        [U, ~, ~] = computSVDForLargeMatrix(vertices_mat(1:3,:) - centroid, 3, opts);
+    end
+    
     normal = U(:, 3);
     normal = normal/norm(normal);       
     if normal(1) < 0
